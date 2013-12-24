@@ -1,0 +1,71 @@
+<html>
+<head>
+<title>Test</title>
+<script type="text/javascript" src="http://platform.linkedin.com/in.js">
+  api_key: mx25madp23gd
+  onLoad: onLinkedInLoad
+  authorize: true
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+function onLinkedInLoad() {
+     IN.Event.on(IN, "auth", onLinkedInAuth);
+}
+function onLinkedInAuth() {
+  IN.API.Connections("me").fields("firstName", "lastName", "positions:(company)", "id", "picture-url").result(displayConnections);
+}
+function displayConnections(connections) {
+    var members = connections.values;
+    var connectionsDiv = document.getElementById("connections");
+    var frndsWithCompany = {};
+        frndsWithoutCompany = [];
+        loneNodes = [];
+    var companies = [];
+    //find company is set or not
+    for (var member in members) {
+      if (members[member].positions) {
+        if (members[member].positions.values) {
+          var company = members[member].positions.values[0].company.name;
+          frndsWithCompany[company] = [];
+        }
+        else {
+        }
+      }
+    }
+    
+    var company = [];
+    for (var member in members) {
+      if (members[member].positions && members[member].positions.values) {
+          var employee = {};
+          
+          employee['name'] = members[member].firstName+ " "+ members[member].lastName;
+          employee['id'] = members[member].id;
+          employee['pic'] = members[member].pictureUrl;
+          frndsWithCompany[members[member].positions.values[0].company.name].push(employee);
+        }
+        else {
+          var emp = {};
+          emp['name'] = members[member].firstName+ " "+ members[member].lastName;
+          emp['id'] = members[member].id;
+          emp['pic'] = members[member].pictureUrl;
+          frndsWithoutCompany.push(emp);
+      }
+    }
+   var connectionsDiv = document.getElementById("connections");
+    for(var item in frndsWithCompany) {
+      connectionsDiv.innerHTML += "<h2>" + item + "  (" + frndsWithCompany[item].length + " )";
+      connectionsDiv.innerHTML += "<ul>";
+      for(var i in frndsWithCompany[item]) {
+        connectionsDiv.innerHTML += '<li><img src="' + frndsWithCompany[item][i].pic + '" width="100" height="100"> &nbsp;&nbsp;' +frndsWithCompany[item][i].name + '</li>';
+      }
+    }
+    
+    
+}
+</script>
+</head>
+<body>
+<script type="IN/Login"></script>
+<div id="connections"></div>
+</body>
+</html>

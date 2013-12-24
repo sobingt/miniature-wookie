@@ -5,46 +5,58 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+	<link rel="stylesheet" href="css/style.css" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 
 <body>
+<div class="row" style="font-size:40px;text-align:center;font-style:italic;">Where my friends work</div>
 
-<div style="float:left;width:250px;height:320px;padding:20px;background-color:rgb(51, 183, 189);text-align:center;font-size:20px;margin-right:30px;margin-bottom:30px;">
+<!--START OF A ROW -->
+
+<div class="col-lg-4 holder">
      <input type="text" class="company" data-fgColor="#AAF200" data-thickness=".1" data-skin="tron" readonly value="4.5">
 	 <br/>
 	 <br/>
-	 <b>Bit Brothers!!!</b>
+	 <b>Bit Brothers(3)</b>
 </div>
 
-<div style="float:left;width:250px;height:320px;padding:20px;background-color:rgb(51, 183, 189);text-align:center;font-size:20px;margin-right:30px;margin-bottom:30px;">
+<div class="col-lg-4 holder">
      <input type="text" class="company" data-fgColor="#D5D50D" data-thickness=".1" data-skin="tron" readonly value="4">
 	 <br/>
 	 <br/>
-	 <b>Infosys Ltd!!!</b>
+	 <b>Infosys Ltd(56)</b>
 </div>
 
-<div style="float:left;width:250px;height:320px;padding:20px;background-color:rgb(51, 183, 189);text-align:center;font-size:20px;margin-right:30px;margin-bottom:30px;">
+<div  class="col-lg-4 holder">
      <input type="text" class="company" data-fgColor="#FFFF00" data-thickness=".1" data-skin="tron" readonly value="3">
 	 <br/>
 	 <br/>
-	 <b>Accenture!!!</b>
+	 <b>Accenture(34)</b>
 </div>
 
-<div style="float:left;width:250px;height:320px;padding:20px;background-color:rgb(51, 183, 189);text-align:center;font-size:20px;margin-right:30px;margin-bottom:30px;">
+<div class="col-lg-4 holder">
      <input type="text" class="company" data-fgColor="#FF6600" data-thickness=".1" data-skin="tron" readonly value="2">
 	 <br/>
 	 <br/>
-	 <b>ICICI Bank!!!</b>
+	 <b>ICICI Bank(49)</b>
 </div>
 
-<div style="float:left;width:250px;height:320px;padding:20px;background-color:rgb(51, 183, 189);text-align:center;font-size:20px;margin-right:30px;margin-bottom:30px;">
-     <input type="text" class="company" data-fgColor="#FF0000" data-thickness=".1" data-skin="tron" readonly value="1">
-	 <br/>
-	 <br/>
-	 <b>Igate Patni!!!</b>
-</div>
+<!--END OF ONE ROW -->
 
+
+<!--
+<div  style="position:relative;float:left;width:350px;height:320px;padding:20px;background-color:rgb(51, 183, 189);text-align:center;font-size:20px;margin-right:30px;margin-bottom:30px;">
+
+	<div style="position:absolute;top:10px;left:10px;">
+     <input type="text" class="company" data-fgColor="#FF0000" data-width="240" data-height="300" data-thickness=".1" data-skin="tron" readonly value="1"> 
+	</div>
+
+	<div style="position:absolute;top:29px;left:31px;">
+		<input class="knob" data-min="0" data-max="60"  data-bgColor="#333" readonly data-displayInput=false data-width="200" data-height="200" data-thickness=".45"><img src="http://graph.facebook.com/sobingt/picture" width="50px" height="50px" style="border-radius:50%"/>
+	</div>
+
+</div> -->
 <!--
  <input class="knob" data-width="150" data-angleOffset="180" readonly data-fgColor="#FF0000" data-skin="tron" data-thickness=".1" value="35">
 -->
@@ -56,6 +68,8 @@
 <script type="text/javascript" src="js/jquery.knob.js"></script>
 <script type="text/javascript">
 $(function() {
+	
+	$(".knob").knob();
 
 	$(".company").knob({
 					'min':0

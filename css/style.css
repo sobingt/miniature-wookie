@@ -1,0 +1,12 @@
+div.holder{
+float:left;
+width:270px;
+height:320px;
+padding:20px;
+background-color:rgb(51, 183, 189);
+text-align:center;
+font-size:20px;
+margin-right:30px;
+margin-bottom:30px;
+margin-left:30px;
+}

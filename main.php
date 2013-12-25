@@ -1,125 +1,177 @@
+<?php 
+    require_once('facebook.php');
+?>
 <html>
 <head>
 	<title>Main</title>
 	<meta name="description" content="starplus" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.knob.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
-	<link rel="stylesheet" href="css/style.css" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="css/font-awesome.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
 </head>
 
 <body>
-<div class="row" style="font-size:40px;text-align:center;font-style:italic;">Where my friends work</div>
-
-<!--START OF A ROW -->
-
-<div class="col-lg-4 holder">
-     <input type="text" class="company" data-fgColor="#AAF200" data-thickness=".1" data-skin="tron" readonly value="4.5">
-	 <br/>
-	 <br/>
-	 <b>Bit Brothers(3)</b>
-</div>
-
-<div class="col-lg-4 holder">
-     <input type="text" class="company" data-fgColor="#D5D50D" data-thickness=".1" data-skin="tron" readonly value="4">
-	 <br/>
-	 <br/>
-	 <b>Infosys Ltd(56)</b>
-</div>
-
-<div  class="col-lg-4 holder">
-     <input type="text" class="company" data-fgColor="#FFFF00" data-thickness=".1" data-skin="tron" readonly value="3">
-	 <br/>
-	 <br/>
-	 <b>Accenture(34)</b>
-</div>
-
-<div class="col-lg-4 holder">
-     <input type="text" class="company" data-fgColor="#FF6600" data-thickness=".1" data-skin="tron" readonly value="2">
-	 <br/>
-	 <br/>
-	 <b>ICICI Bank(49)</b>
-</div>
-
-<!--END OF ONE ROW -->
-
-
-<!--
-<div  style="position:relative;float:left;width:350px;height:320px;padding:20px;background-color:rgb(51, 183, 189);text-align:center;font-size:20px;margin-right:30px;margin-bottom:30px;">
-
-	<div style="position:absolute;top:10px;left:10px;">
-     <input type="text" class="company" data-fgColor="#FF0000" data-width="240" data-height="300" data-thickness=".1" data-skin="tron" readonly value="1"> 
-	</div>
-
-	<div style="position:absolute;top:29px;left:31px;">
-		<input class="knob" data-min="0" data-max="60"  data-bgColor="#333" readonly data-displayInput=false data-width="200" data-height="200" data-thickness=".45"><img src="http://graph.facebook.com/sobingt/picture" width="50px" height="50px" style="border-radius:50%"/>
-	</div>
-
-</div> -->
-<!--
- <input class="knob" data-width="150" data-angleOffset="180" readonly data-fgColor="#FF0000" data-skin="tron" data-thickness=".1" value="35">
--->
-
-
-
-<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.knob.js"></script>
+<div id='overlay'><img class="loader" src="images/loader2.gif"> </div>
+    <div class="container">
+        <header class="row">
+             <div class="col-md-3 ">
+             </div>
+             <div class="col-md-6 ">
+                <div id="logo"></div>
+             </div>
+             <div class="col-md-3 ">
+             </div>
+            
+        </header>
+        <div class="row">
+            <div id="result">
+            </div>
+        </div>
 <script type="text/javascript">
-$(function() {
-	
-	$(".knob").knob();
+var lowratedfriends=new Array();
+var countlow= 0;
+console.log(countlow);
+</script>
+<?php    
+if(count($FriendHaveTitle)> 0){
 
-	$(".company").knob({
-					'min':0
-					,'max':5
-					,'step':0.1
-					,draw : function () {
+    foreach($FriendHaveTitle as $title=>$friends) {
+    ?>
 
-                        // "tron" case
-                        if(this.$.data('skin') == 'tron') {
+                <div class="col-md-3 holderwrapper">
+                <div class="holder">
+                    <div class="circlewrapper <?php echo he($friends[0]['empid']);?>_circlewrapper">
+                        <img class="loader" src="images/loader.gif">
+                        <div id="<?php echo he($friends[0]['empid']);?>_circle" class="circle">
+                            <input type="text" id="<?php echo he($friends[0]['empid']);?>_score" class="company" data-fgColor="#AAF200" data-thickness=".1" data-skin="tron" readonly value="0">
+                        </div>
+                    </div>
+                    <a href="https://facebook.com/<?php echo he($friends[0]['empid']); ?>">
+                        <h4><b><?php echo $title;?></b></h4>
+                    </a>
+                    <div class="rating">
+                            <div id="<?php echo he($friends[0]['empid']);?>_rating"><img class="loader" src="images/loader.gif"> </div>
+                    </div>
+                    <div id="people">
+                    <?php 
+                    $i = 0;
+                    foreach ($friends as $friend) {
+                        if($i>2)
+                            break;
+                        // Extract the pieces of info we need from the requests above
+                        $id = idx($friend, 'id');
+                        $name = idx($friend, 'name');
+                    ?>
+                    <a href="https://facebook.com/<?php echo he($id); ?>"><img class="facebook-profile-picture" src="https://graph.facebook.com/<?php echo he($id); ?>/picture?width=50&height=50"></a>
+                    <?php 
+                    $i++;
+                    }?>
+                    </div>
+                </div>
+            </div>
 
-                            var a = this.angle(this.cv)  // Angle
-                                , sa = this.startAngle          // Previous start angle
-                                , sat = this.startAngle         // Start angle
-                                , ea                            // Previous end angle
-                                , eat = sat + a                 // End angle
-                                , r = 1;
+<script type="text/javascript">
 
-                            this.g.lineWidth = this.lineWidth;
+$.ajax({
+    type: 'GET',
+    contentType: 'application/json; charset=UTF-8',
+    url: 'glassdoor_crawler.php',
+    data: "company=<?php echo $title;?>",
+    dataType: 'json',
+    success: function(data) {
+    
+        if(data[0].rating=='Employees are “Dissatisfied”')
+            lowratedfriends[countlow++]=<?php echo he($friends[0]['empid']);?>;
+            
+        if(data[0].rating!="")
+        {
+            $("#<?php echo he($friends[0]['empid']);?>_rating").html(data[0].rating);
+            $('#<?php echo he($friends[0]['empid']);?>_score').val(data[0].score).trigger('change');
+            $("#<?php echo he($friends[0]['empid']);?>_circle").show();
+            
+            /*$('#<?php echo he($friends[0]['empid']);?>_score').knob({
+                'fgColor': 'black'
+            });*/
+            //if (typeof rating[data[0].rating] === "undefined")
+        }
+        else
+        {
+            if(data[0].score>0)
+            {
+                $("#<?php echo he($friends[0]['empid']);?>_rating").html("Rating not found");
+                $('#<?php echo he($friends[0]['empid']);?>_score').val(data[0].score).trigger('change');
+                $("#<?php echo he($friends[0]['empid']);?>_circle").show();
+            }
+            else
+            {
+                $(".<?php echo he($friends[0]['empid']);?>_circlewrapper").css('background','url("images/rated.png") no-repeat center center');
+                $(".<?php echo he($friends[0]['empid']);?>_circlewrapper").css('background-size','100%');
+                $("#<?php echo he($friends[0]['empid']);?>_circle").hide();
+            }
 
-                            this.o.cursor
-                                && (sat = eat - 0.3)
-                                && (eat = eat + 0.3);
+        }
+        $(".<?php echo he($friends[0]['empid']);?>_circlewrapper img.loader").hide();
+        $(".<?php echo he($friends[0]['empid']);?>_rating img.loader").hide();
 
-                            if (this.o.displayPrevious) {
-                                ea = this.startAngle + this.angle(this.v);
-                                this.o.cursor
-                                    && (sa = ea - 0.3)
-                                    && (ea = ea + 0.3);
-                                this.g.beginPath();
-                                this.g.strokeStyle = this.pColor;
-                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
-                                this.g.stroke();
-                            }
-
-                            this.g.beginPath();
-                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor ;
-                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
-                            this.g.stroke();
-
-                            this.g.lineWidth = 2;
-                            this.g.beginPath();
-                            this.g.strokeStyle = this.o.fgColor;
-                            this.g.arc( this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
-                            this.g.stroke();
-
-                            return false;
-                        }
-                    }
-                });
+    },
+    error: function( data ) {
+        $("#<?php echo he($friends[0]['empid']);?>_rating").html("Company not found");
+        $(".<?php echo he($friends[0]['empid']);?>_circlewrapper").css('background','url("images/rated.png") no-repeat center center');
+        $(".<?php echo he($friends[0]['empid']);?>_circlewrapper").css('background-size','100%');
+         $(".<?php echo he($friends[0]['empid']);?>_circlewrapper img").hide();
+         console.log(<?php echo he($friends[0]['empid']);?>);
+    }
 });
 </script>
+        <?php }
+    }
+    else{
+        header('Location: login.php');
+    }
+    ?>
+
+        </div>
+
+	<script>
+    
+    function countForText(a)
+    {
+        var i=0;
+        if(window.find)
+        {
+            while(window.find(a))
+            {
+                i++
+            }
+        }
+        else if(document.body.createTextRange)
+        {
+            var rng=document.body.createTextRange();
+            while(rng.findText(a))
+            {
+              i++;
+            }
+        }
+        return i;
+    }
+        // Wait for window load
+		$(window).load(function() {
+            $("#overlay").css({
+                 'display' : 'none'
+              });
+              $('#result').html("<h2>"+countForText('Employees are “Dissatisfied”')+" people are unhappy with their jobs</h2>");
+                $('.rating .loader').parent().html("Company not Found");
+		});
+       
+
+	</script>	
 </body>
 </html>

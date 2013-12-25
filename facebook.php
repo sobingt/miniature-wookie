@@ -46,7 +46,9 @@ if ($user) {
             //foreach($friend['work'] as $work){
                 $work=$friend['work'][0];
                 if(array_key_exists('employer',$work)){
-                    $FriendHaveTitle[$work['employer']['name']][]=array(
+                $workplacename = $work['employer']['name'];
+                $workplacename = str_replace('"'," ",$workplacename);
+                    $FriendHaveTitle[$workplacename][]=array(
                         'id'=>$friend['id'],
                         'name'=>$friend['name'],
                         'empid'=>$work['employer']['id'],

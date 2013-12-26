@@ -23,7 +23,7 @@
          IN.Event.on(IN, "auth", onLinkedInAuth);
     }
     function onLinkedInAuth() {
-      IN.API.Connections("me").fields("firstName", "lastName", "positions:(company)", "id", "picture-url").result(displayConnections);
+      IN.API.Connections("me").fields("firstName", "lastName", "positions:(company)", "id", "picture-url", "site-standard-profile-request").result(displayConnections);
     }
     function displayConnections(connections) {
         var members = connections.values;
@@ -52,6 +52,7 @@
               employee['name'] = members[member].firstName+ " "+ members[member].lastName;
               employee['id'] = members[member].id;
               employee['pic'] = members[member].pictureUrl;
+              employee['url'] = members[member].siteStandardProfileRequest.url;
               frndsWithCompany[members[member].positions.values[0].company.name].push(employee);
             }
             else {
@@ -59,6 +60,7 @@
               emp['name'] = members[member].firstName+ " "+ members[member].lastName;
               emp['id'] = members[member].id;
               emp['pic'] = members[member].pictureUrl;
+              emp['url'] = members[member].siteStandardProfileRequest;
               frndsWithoutCompany.push(emp);
           }
         }
@@ -86,7 +88,7 @@
             
             if(i<=2)
             {
-                html +='<a href="#"><img class="facebook-profile-picture" alt="'+frndsWithCompany[item][i].name+'"src="' + frndsWithCompany[item][i].pic + '"></a>';
+                html +='<a href="'+frndsWithCompany[item][i].url+'"><img class="facebook-profile-picture" alt="'+frndsWithCompany[item][i].name+'"src="' + frndsWithCompany[item][i].pic + '"></a>';
             }
             else
             {
@@ -106,7 +108,7 @@
           html +='<div class="modal-body">';
                 
           for(var i in frndsWithCompany[item]) {
-              html +='<a href="#"><img class="facebook-profile-picture" alt="'+frndsWithCompany[item][i].name+'"src="' + frndsWithCompany[item][i].pic + '"></a>';
+              html +='<a href="'+frndsWithCompany[item][i].url+'"><img class="facebook-profile-picture" alt="'+frndsWithCompany[item][i].name+'"src="' + frndsWithCompany[item][i].pic + '"></a>';
           }
           html +='</div>';
           html +='</div><!-- /.modal-content -->';
@@ -175,7 +177,7 @@
             
                 //if(data[0].rating=='Employees are “Dissatisfied”')
                     //lowratedfriends[countlow++]=counter;
-                    
+                    console.log(data);
                 if(data[0].rating!="")
                 {
                     $('#'+counter+'_rating').html(data[0].rating);

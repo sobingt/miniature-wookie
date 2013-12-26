@@ -1,7 +1,7 @@
 <?php
 include_once('crawler.php');
 $company= $_REQUEST['company'];
-$target_url="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?clickSource=searchBtn&typedKeyword=&sc.keyword=$company";
+$target_url="http://www.glassdoor.com/GD/Reviews/company-reviews.htm?clickSource=searchBtn&typedKeyword=&sc.keyword=".urlencode($company);
 $html = new crawler();
 $html->load_file($target_url);
 $score = $html->find('.gdRatingValueBar span.notranslate');

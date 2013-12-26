@@ -19,6 +19,8 @@
 </head>
 
 <body>
+
+
 <div id='overlay'><img class="loader" src="images/loader2.gif"> </div>
     <div class="container">
         <header class="row">
@@ -56,7 +58,7 @@ if(count($FriendHaveTitle)> 0){
                     </div>
                     <a href="https://facebook.com/<?php echo he($friends[0]['empid']); ?>">
                         <h4><b><?php echo $title;?></b></h4>
-                    </a>
+                    </a>(<?php echo count($friends); ?>)
                     <div class="rating">
                             <div id="<?php echo he($friends[0]['empid']);?>_rating"><img class="loader" src="images/loader.gif"> </div>
                     </div>
@@ -65,7 +67,11 @@ if(count($FriendHaveTitle)> 0){
                     $i = 0;
                     foreach ($friends as $friend) {
                         if($i>2)
+                        {
+                            $i++;
                             break;
+                        }    
+                            
                         // Extract the pieces of info we need from the requests above
                         $id = idx($friend, 'id');
                         $name = idx($friend, 'name');
@@ -73,8 +79,41 @@ if(count($FriendHaveTitle)> 0){
                     <a href="https://facebook.com/<?php echo he($id); ?>"><img class="facebook-profile-picture" src="https://graph.facebook.com/<?php echo he($id); ?>/picture?width=50&height=50"></a>
                     <?php 
                     $i++;
-                    }?>
+                    }
+                    if($i>3)
+                    {
+                    ?>
+                    <a data-toggle="modal" data-target="#<?php echo he($friends[0]['empid']);?>_modal" href="#<?php echo he($id); ?>"><img class="facebook-profile-picture" src="images/more.png"></a>
+                    <?php
+                    }
+                    ?>
                     </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="<?php echo he($friends[0]['empid']);?>_modal" tabindex="-1" role="dialog" aria-labelledby="<?php echo $title;?>" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="<?php echo $title;?>"><?php echo $title;?></h4>
+                          </div>
+                          <div class="modal-body">
+                            <?php 
+                            foreach ($friends as $friend) {
+                                // Extract the pieces of info we need from the requests above
+                                $id = idx($friend, 'id');
+                                $name = idx($friend, 'name');
+                            ?>
+                            <a href="https://facebook.com/<?php echo he($id); ?>"><img class="facebook-profile-picture" src="https://graph.facebook.com/<?php echo he($id); ?>/picture?width=100&height=100"></a>
+                            <?php 
+                            $i++;
+                            }
+                            ?>
+                          </div>
+                        </div><!-- /.modal-content -->
+                      </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    
+                    
                 </div>
             </div>
 
@@ -169,6 +208,7 @@ $.ajax({
               });
               $('#result').html("<h2>"+countForText('Employees are “Dissatisfied”')+" people are unhappy with their jobs</h2>");
                 $('.rating .loader').parent().html("Company not Found");
+                window.scrollTo();
 		});
        
 

@@ -1,71 +1,248 @@
 <html>
 <head>
-<title>Test</title>
-<script type="text/javascript" src="http://platform.linkedin.com/in.js">
-  api_key: mx25madp23gd
-  onLoad: onLinkedInLoad
-  authorize: true
-</script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript">
-function onLinkedInLoad() {
-     IN.Event.on(IN, "auth", onLinkedInAuth);
-}
-function onLinkedInAuth() {
-  IN.API.Connections("me").fields("firstName", "lastName", "positions:(company)", "id", "picture-url").result(displayConnections);
-}
-function displayConnections(connections) {
-    var members = connections.values;
-    var connectionsDiv = document.getElementById("connections");
-    var frndsWithCompany = {};
-        frndsWithoutCompany = [];
-        loneNodes = [];
-    var companies = [];
-    //find company is set or not
-    for (var member in members) {
-      if (members[member].positions) {
-        if (members[member].positions.values) {
-          var company = members[member].positions.values[0].company.name;
-          frndsWithCompany[company] = [];
-        }
-        else {
-        }
-      }
+	<title>Main</title>
+	<meta name="description" content="starplus" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.knob.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+	<link rel="stylesheet" href="css/font-awesome.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="text/javascript" src="http://platform.linkedin.com/in.js">
+      api_key: mx25madp23gd
+      onLoad: onLinkedInLoad
+      authorize: true
+    </script>
+
+    <script type="text/javascript">
+    function onLinkedInLoad() {
+         IN.Event.on(IN, "auth", onLinkedInAuth);
     }
-    
-    var company = [];
-    for (var member in members) {
-      if (members[member].positions && members[member].positions.values) {
-          var employee = {};
+    function onLinkedInAuth() {
+      IN.API.Connections("me").fields("firstName", "lastName", "positions:(company)", "id", "picture-url").result(displayConnections);
+    }
+    function displayConnections(connections) {
+        var members = connections.values;
+        var connectionsDiv = document.getElementById("connections");
+        var frndsWithCompany = {};
+            frndsWithoutCompany = [];
+            loneNodes = [];
+        var companies = [];
+        //find company is set or not
+        for (var member in members) {
+          if (members[member].positions) {
+            if (members[member].positions.values) {
+              var company = members[member].positions.values[0].company.name;
+              frndsWithCompany[company] = [];
+            }
+            else {
+            }
+          }
+        }
+        
+        var company = [];
+        for (var member in members) {
+          if (members[member].positions && members[member].positions.values) {
+              var employee = {};
+              
+              employee['name'] = members[member].firstName+ " "+ members[member].lastName;
+              employee['id'] = members[member].id;
+              employee['pic'] = members[member].pictureUrl;
+              frndsWithCompany[members[member].positions.values[0].company.name].push(employee);
+            }
+            else {
+              var emp = {};
+              emp['name'] = members[member].firstName+ " "+ members[member].lastName;
+              emp['id'] = members[member].id;
+              emp['pic'] = members[member].pictureUrl;
+              frndsWithoutCompany.push(emp);
+          }
+        }
+       var connectionsDiv = document.getElementById("connections");
+        var counter =1;
+        
+        for(var item in frndsWithCompany) {
+        var html="";
+          html +='<div class="col-md-3 holderwrapper"><div class="holder">';
+          html +='<div class="circlewrapper '+counter+'_circlewrapper">';
+          html +='<img class="loader" src="images/loader.gif">';
+          html +='<div id="'+counter+'_circle" class="circle">';
+          html +='<input type="text" id="'+counter+'_score" class="company" data-fgColor="#AAF200" data-thickness=".1" data-skin="tron" readonly value="0">';
+          html +='</div>';
+          html +='</div>';
+          html +='<a href="#">';
+          html +='<h4><b>'+item+'</b></h4></a>('+frndsWithCompany[item].length+')';
+          html +='<div class="rating">';
+          html +='<div id="'+counter+'_rating"><img class="loader" src="images/loader.gif">';
+          html +='</div>';
+          html +='</div>';
+          html +='<div id="people">';
+
+          for(var i in frndsWithCompany[item]) {
+            
+            if(i<=2)
+            {
+                html +='<a href="#"><img class="facebook-profile-picture" alt="'+frndsWithCompany[item][i].name+'"src="' + frndsWithCompany[item][i].pic + '"></a>';
+            }
+            else
+            {
+                html +='<a data-toggle="modal" data-target="#'+counter+'_modal" href="#'+counter+'"><img class="facebook-profile-picture" src="images/more.png"></a>';
+                break;
+            }
+                
+          }
+          <!-- Modal -->
+          html +='<div class="modal fade" id="'+counter+'_modal" tabindex="-1" role="dialog" aria-labelledby="'+item+'" aria-hidden="true">';
+          html +='<div class="modal-dialog">';
+          html +='<div class="modal-content">';
+          html +='<div class="modal-header">';
+          html +='<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+          html +='<h4 class="modal-title" id="'+item+'">'+item+'</h4>';
+          html +='</div>';
+          html +='<div class="modal-body">';
+                
+          for(var i in frndsWithCompany[item]) {
+              html +='<a href="#"><img class="facebook-profile-picture" alt="'+frndsWithCompany[item][i].name+'"src="' + frndsWithCompany[item][i].pic + '"></a>';
+          }
+          html +='</div>';
+          html +='</div><!-- /.modal-content -->';
+          html +='</div><!-- /.modal-dialog -->';
+          html +='</div><!-- /.modal -->';
+          html +='</div>';
+          html +='</div>';
+          html +='</div>';
           
-          employee['name'] = members[member].firstName+ " "+ members[member].lastName;
-          employee['id'] = members[member].id;
-          employee['pic'] = members[member].pictureUrl;
-          frndsWithCompany[members[member].positions.values[0].company.name].push(employee);
+          $("#connections").append(html);
+       	$(".company").knob({
+					'min':0
+					,'max':5
+					,'step':0.1
+					,draw : function () {
+
+                        // "tron" case
+                        if(this.$.data('skin') == 'tron') {
+
+                            var a = this.angle(this.cv)  // Angle
+                                , sa = this.startAngle          // Previous start angle
+                                , sat = this.startAngle         // Start angle
+                                , ea                            // Previous end angle
+                                , eat = sat + a                 // End angle
+                                , r = 1;
+
+                            this.g.lineWidth = this.lineWidth;
+
+                            this.o.cursor
+                                && (sat = eat - 0.3)
+                                && (eat = eat + 0.3);
+
+                            if (this.o.displayPrevious) {
+                                ea = this.startAngle + this.angle(this.v);
+                                this.o.cursor
+                                    && (sa = ea - 0.3)
+                                    && (ea = ea + 0.3);
+                                this.g.beginPath();
+                                this.g.strokeStyle = this.pColor;
+                                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
+                                this.g.stroke();
+                            }
+
+                            this.g.beginPath();
+                            this.g.strokeStyle = r ? this.o.fgColor : this.fgColor ;
+                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
+                            this.g.stroke();
+
+                            this.g.lineWidth = 2;
+                            this.g.beginPath();
+                            this.g.strokeStyle = this.o.fgColor;
+                            this.g.arc( this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                            this.g.stroke();
+
+                            return false;
+                        }
+                    }
+                });
+          $.ajax({
+            type: 'GET',
+            contentType: 'application/json; charset=UTF-8',
+            url: 'glassdoor_crawler.php',
+            data: 'company='+item,
+            dataType: 'json',
+            success: function(data) {
+            
+                //if(data[0].rating=='Employees are “Dissatisfied”')
+                    //lowratedfriends[countlow++]=counter;
+                    
+                if(data[0].rating!="")
+                {
+                    $('#'+counter+'_rating').html(data[0].rating);
+                    $('#'+counter+'_score').val(data[0].score).trigger('change');
+                    $('#'+counter+'_circle').show();
+                    
+                    /*$('#<?php echo he($friends[0]['empid']);?>_score').knob({
+                        'fgColor': 'black'
+                    });*/
+                    //if (typeof rating[data[0].rating] === "undefined")
+                }
+                else
+                {
+                    if(data[0].score>0)
+                    {
+                        $('#'+counter+'_rating').html("Rating not found");
+                        $('#'+counter+'_score').val(data[0].score).trigger('change');
+                        $('#'+counter+'_circle').show();
+                    }
+                    else
+                    {
+                        $("."+counter+"_circlewrapper").css('background','url("images/rated.png") no-repeat center center');
+                        $("."+counter+"_circlewrapper").css('background-size','100%');
+                        $("#"+counter+"_circle").hide();
+                    }
+
+                }
+                $("."+counter+"_circlewrapper img.loader").hide();
+                $("."+counter+"_rating img.loader").hide();
+
+            },
+            error: function( data ) {
+                $("#"+counter+"_rating").html("Company not found");
+                $("."+counter+"_circlewrapper").css('background','url("images/rated.png") no-repeat center center');
+                $("."+counter+"_circlewrapper").css('background-size','100%');
+                 $("."+counter+"_circlewrapper img").hide();
+                 
+            }
+        });
+        counter++;
         }
-        else {
-          var emp = {};
-          emp['name'] = members[member].firstName+ " "+ members[member].lastName;
-          emp['id'] = members[member].id;
-          emp['pic'] = members[member].pictureUrl;
-          frndsWithoutCompany.push(emp);
-      }
+        $("#overlay").css({
+            'display' : 'none'
+        });        
     }
-   var connectionsDiv = document.getElementById("connections");
-    for(var item in frndsWithCompany) {
-      connectionsDiv.innerHTML += "<h2>" + item + "  (" + frndsWithCompany[item].length + " )";
-      connectionsDiv.innerHTML += "<ul>";
-      for(var i in frndsWithCompany[item]) {
-        connectionsDiv.innerHTML += '<li><img src="' + frndsWithCompany[item][i].pic + '" width="100" height="100"> &nbsp;&nbsp;' +frndsWithCompany[item][i].name + '</li>';
-      }
-    }
-    
-    
-}
-</script>
+    </script>
 </head>
 <body>
-<script type="IN/Login"></script>
-<div id="connections"></div>
+<div id='overlay'><img class="loader" src="images/loader2.gif"> </div>    
+<div class="container">
+    <header class="row">
+        <div class="col-md-3 ">
+        </div>
+        <div class="col-md-6 ">
+            <div id="logo"></div>
+        </div>
+        <div class="col-md-3 ">
+        </div>
+    </header>
+    <div class="row">
+        <div id="result">
+        </div>
+    </div>
+    <script type="IN/Login"></script>
+    <div class="row" id="connections">
+        
+    </div>
+</div>
 </body>
-</html>
+</html> 

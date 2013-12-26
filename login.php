@@ -12,6 +12,25 @@ require_once('AppInfo.php');
         <link rel="stylesheet" href="css/font-awesome.css" />
         <link rel="stylesheet" href="css/style.css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <script type="text/javascript" src="http://platform.linkedin.com/in.js">
+      api_key: mx25madp23gd
+      onLoad: onLinkedInLoad
+      authorize: true
+    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+    <script type="text/javascript">
+    function onLinkedInLoad() {
+         IN.Event.on(IN, "auth", onLinkedInAuth);
+    }
+    function onLinkedInAuth() {
+      IN.API.Connections("me").fields("firstName", "lastName", "positions:(company)", "id", "picture-url").result(redirectionindex);
+    }
+    function redirectionindex(connections)
+    {
+        window.location="linkedin.html";
+    }
+    </script>
+
     </head>
     <body>
     <div id="fb-root"></div>

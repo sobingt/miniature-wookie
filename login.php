@@ -12,24 +12,31 @@ require_once('AppInfo.php');
         <link rel="stylesheet" href="css/font-awesome.css" />
         <link rel="stylesheet" href="css/style.css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        // <script type="text/javascript" src="http://platform.linkedin.com/in.js">
-        //     api_key: mx25madp23gd
-        //     onLoad: onLinkedInLoad
-        //     authorize: true
-        // </script>
+         <script type="text/javascript" src="http://platform.linkedin.com/in.js">
+            api_key: mx25madp23gd
+            onLoad: onLinkedInLoad
+            authorize: true
+         </script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
-        // <script type="text/javascript">
-        // function onLinkedInLoad() {
-        //      IN.Event.on(IN, "auth", onLinkedInAuth);
-        // }
-        // function onLinkedInAuth() {
-        //   IN.API.Connections("me").fields("firstName", "lastName", "positions:(company)", "id", "picture-url").result(redirectionindex);
-        // }
-        // function redirectionindex(connections)
-        // {
-        //     window.location="linkedin.html";
-        // }
-        // </script>
+        <script type="text/javascript">
+        $(function(){
+            $('#linkedin').css({display:'block'});
+        });
+        function onLinkedInLoad() {
+            $('a[id*=li_ui_li_gen_]').html('<div class="btn btn-block btn-lg btn-social btn-linkedin"><i class="fa fa-linkedin" style="font-size:22px; margin-right:15px; margin-left:15px">   &nbsp;Sign In with LinkedIn</i></div>');
+            $('.btn-linkedin').css({"width":"255px", "height":"48px"});
+            $('#linkedin').css({display:'hidden'});
+
+            IN.Event.on(IN, "auth", onLinkedInAuth);
+        }
+        function onLinkedInAuth() {
+          IN.API.Connections("me").fields("firstName", "lastName", "positions:(company)", "id", "picture-url").result(redirectionindex);
+        }
+        function redirectionindex(connections)
+        {
+            window.location="linkedin.html";
+        }
+         </script>
     </head>
     <body>
     <div id="fb-root"></div>
@@ -59,6 +66,7 @@ require_once('AppInfo.php');
         js.src = "//connect.facebook.net/en_US/all.js";
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
+
     </script>
 
     <div class="container">
@@ -75,8 +83,9 @@ require_once('AppInfo.php');
         <div class="col-md-3">
         </div>
         <div class="col-md-3">
-            <a href="linkedin.html" class="btn btn-block btn-lg btn-social btn-linkedin">
-                <i class="fa fa-linkedin"></i> Sign in with LinkedIn
+            <!-- <a href="linkedin.html" class="btn btn-block btn-lg btn-social btn-linkedin" style="width:255px; height:47px;"> -->
+                
+            <div id="linkedin"><script type="IN/Login">Sign in with LinkedIn</script></div>
             </a>
         </div>
         <div class="col-md-3">
@@ -85,7 +94,6 @@ require_once('AppInfo.php');
             </a>
         </div>
         <div class="col-md-3">
-
         </div>
     </div>
     <footer id="footer" style="position:absolute;bottom:0;height:60px;width:100%;text-align:right;">

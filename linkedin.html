@@ -69,17 +69,18 @@
         
         for(var item in frndsWithCompany) {
         var html="";
+        var counterName = item.split(' ').join('_');
           html +='<div class="col-md-3 holderwrapper"><div class="holder">';
-          html +='<div class="circlewrapper '+counter+'_circlewrapper">';
+          html +='<div class="circlewrapper circlewrapper_'+counterName+'">';
           html +='<img class="loader" src="images/loader.gif">';
-          html +='<div id="'+counter+'_circle" class="circle">';
-          html +='<input type="text" id="'+counter+'_score" class="company" data-fgColor="#AAF200" data-thickness=".1" data-skin="tron" readonly value="0">';
+          html +='<div id="circle_'+counterName+'" class="circle">';
+          html +='<input type="text" id="score_'+counterName+'" class="company" data-fgColor="#AAF200" data-thickness=".1" data-skin="tron" readonly value="0">';
           html +='</div>';
           html +='</div>';
           html +='<a href="#">';
           html +='<h4><b>'+item+'</b></h4></a>('+frndsWithCompany[item].length+')';
           html +='<div class="rating">';
-          html +='<div id="'+counter+'_rating"><img class="loader" src="images/loader.gif">';
+          html +='<div id="rating_'+counterName+'"><img class="loader" src="images/loader.gif">';
           html +='</div>';
           html +='</div>';
           html +='<div id="people">';
@@ -92,13 +93,13 @@
             }
             else
             {
-                html +='<a data-toggle="modal" data-target="#'+counter+'_modal" href="#'+counter+'"><img class="facebook-profile-picture" src="images/more.png"></a>';
+                html +='<a data-toggle="modal" data-target="#'+counterName+'_modal" href="#'+counterName+'"><img class="facebook-profile-picture" src="images/more.png"></a>';
                 break;
             }
                 
           }
           <!-- Modal -->
-          html +='<div class="modal fade" id="'+counter+'_modal" tabindex="-1" role="dialog" aria-labelledby="'+item+'" aria-hidden="true">';
+          html +='<div class="modal fade" id="modal_'+counterName+'" tabindex="-1" role="dialog" aria-labelledby="'+item+'" aria-hidden="true">';
           html +='<div class="modal-dialog">';
           html +='<div class="modal-content">';
           html +='<div class="modal-header">';
@@ -167,54 +168,50 @@
                         }
                     }
                 });
+
           $.ajax({
             type: 'GET',
             contentType: 'application/json; charset=UTF-8',
             url: 'glassdoor_crawler.php',
-            data: 'company='+item,
+            data: 'company='+item+'&counter='+item,
             dataType: 'json',
             success: function(data) {
-            
-                //if(data[0].rating=='Employees are “Dissatisfied”')
-                    //lowratedfriends[countlow++]=counter;
-                    console.log(data);
+              var counterName = data[0].counter;
                 if(data[0].rating!="")
                 {
-                    $('#'+counter+'_rating').html(data[0].rating);
-                    $('#'+counter+'_score').val(data[0].score).trigger('change');
-                    $('#'+counter+'_circle').show();
-                    
-                    /*$('#<?php echo he($friends[0]['empid']);?>_score').knob({
-                        'fgColor': 'black'
-                    });*/
-                    //if (typeof rating[data[0].rating] === "undefined")
+                    $('#rating_'+ data[0].counterName).html(data[0].rating);
+                    $('#score_'+ data[0].counterName).val(data[0].score).trigger('change');
+                    $('#circle_'+ data[0].counterName).show();
                 }
                 else
                 {
                     if(data[0].score>0)
                     {
-                        $('#'+counter+'_rating').html("Rating not found");
-                        $('#'+counter+'_score').val(data[0].score).trigger('change');
-                        $('#'+counter+'_circle').show();
+                        $('#rating_'+ data[0].counterName).html("Rating not found");
+                        $('#score_'+ data[0].counterName).val(data[0].score).trigger('change');
+                        $('#circle_'+ data[0].counterName).show();
                     }
                     else
                     {
-                        $("."+counter+"_circlewrapper").css('background','url("images/rated.png") no-repeat center center');
-                        $("."+counter+"_circlewrapper").css('background-size','100%');
-                        $("#"+counter+"_circle").hide();
+                        $(".circlewrapper_"+ data[0].counterName).css('background','url("images/rated.png") no-repeat center center');
+                        $(".circlewrapper_"+ data[0].counterName).css('background-size','100%');
+                        $("#circle_"+ data[0].counterName).hide();
                     }
 
                 }
-                $("."+counter+"_circlewrapper img.loader").hide();
-                $("."+counter+"_rating img.loader").hide();
+                $(".circlewrapper_"+ data[0].counterName+" img.loader").hide();
+                $(".rating_"+ data[0].counterName+" img.loader").hide();
 
             },
             error: function( data ) {
-                $("#"+counter+"_rating").html("Company not found");
-                $("."+counter+"_circlewrapper").css('background','url("images/rated.png") no-repeat center center');
-                $("."+counter+"_circlewrapper").css('background-size','100%');
-                 $("."+counter+"_circlewrapper img").hide();
-                 
+              console.log(data);
+              /*
+
+                $("#rating_"+ data[0].counterName).html("Company not found");
+                $(".circlewrapper_"+ data[0].counterName).css('background','url("images/rated.png") no-repeat center center');
+                $(".circlewrapper_"+ data[0].counterName).css('background-size','100%');
+                $(".circlewrapper_"+ data[0].counterName+" img").hide();
+              */ 
             }
         });
         counter++;
@@ -222,21 +219,49 @@
         $("#overlay").css({
             'display' : 'none'
         });        
+        
+    $('.loader').css({display:'none'});
     }
+    function countForText(a)
+    {
+        var i=0;
+        if(window.find)
+        {
+            while(window.find(a))
+            {
+                i++
+            }
+        }
+        else if(document.body.createTextRange)
+        {
+            var rng=document.body.createTextRange();
+            while(rng.findText(a))
+            {
+              i++;
+            }
+        }
+        return i;
+    }
+    // Wait for window load
+    $(window).load(function() {
+              $('#result').html("<h2>"+countForText('Employees are “Dissatisfied”')+" people are unhappy with their jobs</h2>");
+                $('.rating .loader').parent().html("Company not Found");
+                window.scrollTo();
+    });
     </script>
 </head>
 <body>
-<div id='overlay'><img class="loader" src="images/loader2.gif"> </div>    
+<div id='overlay'><img class="loader" src="images/loader2.gif"> </div>  
 <div class="container">
     <header class="row">
         <div class="col-md-3 ">
         </div>
         <div class="col-md-6 ">
             <div id="logo"></div>
-        </div>
+        </div>  
         <div class="col-md-3 ">
         </div>
-    </header>
+    </header>  
     <div class="row">
         <div id="result">
         </div>
